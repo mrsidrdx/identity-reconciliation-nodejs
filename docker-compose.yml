@@ -1,0 +1,27 @@
+version: '3'
+services:
+
+  postgres:
+    image: "postgres:14.5"
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./.env
+    environment:
+      POSTGRES_USER: ${NODE_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${NODE_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${NODE_POSTGRES_DBNAME}
+
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    environment:
+      NODE_POSTGRES_USER: ${NODE_POSTGRES_USER}
+      NODE_POSTGRES_PASSWORD: ${NODE_POSTGRES_PASSWORD}
+      NODE_POSTGRES_HOST: ${NODE_POSTGRES_HOST}
+      NODE_POSTGRES_DBNAME: ${NODE_POSTGRES_DBNAME}
